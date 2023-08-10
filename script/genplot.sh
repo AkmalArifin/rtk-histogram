@@ -112,7 +112,7 @@ case $GRAPH in
                 KEY="set key bmargin center horizontal"
                 # XTICS="set xtics 1,2,4,8,16,32,64,128"
                 Y="xtic(1)"
-                X="(\$2/1000)"
+                X="(\$2*0.000001)"
                 ;;
             *)
                 echo "Unknown Type: $TYPE, exiting .."
