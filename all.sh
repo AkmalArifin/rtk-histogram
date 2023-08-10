@@ -25,6 +25,7 @@ TARGET=$1
 # -- lat-time   : Latency (Y-axis) vs Time (X-axis)
 # -- iops-time  : IOPS (Y-axis) vs Time (X-axis)
 # -- bw-time    : Bandwidth (Y-axis) vs Time (X-axis)
+# -- lat-cdf    : Latency CDF graph
 
 # hist : Histograph
 # -- iops-numjobs   : IOPS (Y-axis) vs Numjobs (X-axis)

@@ -1,10 +1,8 @@
-import os
+import os 
 import sys
 import re
 
-TOPDIR = os.path.abspath(os.getcwd())
-RAWDIR = TOPDIR + "/raw"
-DATDIR = TOPDIR + "/dat"
+DIVIDER = 1000000 # cdf graph per 100 us
 
 def combine_log(file_name, folder_name):
 
@@ -50,13 +48,8 @@ def combine_log(file_name, folder_name):
                 new_log[idx][1] += line[1]
             except:
                 print(idx)
-    
-    sum = 0
-    for line in new_log:
-        sum += line[1]
-    avg = sum/highest_count
 
-    return [numjobs, avg]
+    return new_log
 
 def average_log(file_name, folder_name):
 
@@ -103,47 +96,73 @@ def average_log(file_name, folder_name):
             except:
                 print(idx)
 
-    sum = 0
     for line in new_log:
-        sum += line[1]
-    avg = sum / (highest_count * numjobs)
+        line[1] = line[1]/numjobs
 
-    return [numjobs, avg]
+    return new_log
+
+# TODO: Fix cdf log
+def cdf_log(log):
+    log.sort(key=lambda x: x[1])
+
+    new_log = []
+    
+    iter_lat = int(log[0][1]/DIVIDER)
+    print("Iter lat", iter_lat)
+    total = len(log)
+    for i in range(len(log)):
+        if (iter_lat < int(log[i][1]/DIVIDER)):
+            prob = (i+1)/total
+            new_log.append([prob, (iter_lat+1)*DIVIDER])
+            iter_lat = int(log[i][1]/DIVIDER)
+
+    new_log.append([1, (iter_lat+1)*DIVIDER])
+
+    for line in new_log:
+        print(line)
+    return new_log
+
+def write_file(log, file_name, folder_name):
+    dest_path = DATDIR + '/' + folder_name
+    if not os.path.exists(dest_path):
+        os.mkdir(dest_path)
+
+    dest_file = dest_path + '/' + file_name + '.dat'
+    file = open(dest_file, 'w')
+
+    for line in log:
+        output_line = '  '.join(str(x) for x in line)
+        output_line += '\n'
+        file.write(output_line)
+
+
+TOPDIR = os.path.abspath(os.getcwd())
+RAWDIR = TOPDIR + "/raw"
+DATDIR = TOPDIR + "/dat"
 
 folder_name = sys.argv[1]
 graph = sys.argv[2]
 data = sys.argv[3]
-target_folder_name = sys.argv[4]
-print(folder_name)
-print(target_folder_name)
-data = data.split("-")[0]
-pattern = r"_{}\.log$".format(data)
+
+data1 = data.split("-")[0]
+data2 = data.split("-")[1]
+data2.replace("\n", "")
+pattern = r"_{}\.log$".format(data1)
 
 results_log = []
 
 for file_name in os.listdir(RAWDIR + '/' + folder_name):
-    result = re.search(pattern, file_name)
+    result = re.search(pattern,file_name)
     if (result):
         print(file_name)
-        if data == "iops":
+        if data1 == "iops" or data1 == "bw":
             output = combine_log(file_name, folder_name)
-        elif data == "lat":
+        elif data1 == "lat":
             output = average_log(file_name, folder_name)
+            if data2 == "cdf":
+                output = cdf_log(output)
         else:
             print("Data is unknown")
             exit
-        results_log.append(output)
-
-results_log.sort()
-
-dest_path = DATDIR + '/' + target_folder_name
-if not os.path.exists(dest_path):
-    os.mkdir(dest_path)
-
-dest_file = dest_path + '/' + folder_name + '.dat'
-file = open(dest_file, 'w')
-
-for line in results_log:
-    output_line = '  '.join(str(x) for x in line)
-    output_line += '\n'
-    file.write(output_line)
+        
+        write_file(output, file_name, folder_name)

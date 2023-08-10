@@ -34,18 +34,37 @@ TARGET="$1"
 GRAPH="$2"
 DATA="$3"
 
-i=1
-LIST_TARGET=($1)
-input="temporary"
+if [[ $GRAPH == "line" ]]; then
+    echo "LINE"
+    python $SCRIPTDIR/line.py $TARGET $GRAPH $DATA
+elif [[ $GRAPH == "hist" ]]; then
+    echo "HIST"
 
-while [[ $input != "" ]]; do
-    read input
-    LIST_TARGET[$i]=$input
-    i+=1
-done
+    i=1
+    LIST_TARGET=($1)
+    input="temporary"
 
-for value in "${LIST_TARGET[@]}"; do
-    if [[ $value != "" ]]; then 
-        python $SCRIPTDIR/raw2dat.py $value $GRAPH $DATA $TARGET
-    fi
-done
+    while [[ $input != "" ]]; do
+        read input
+        LIST_TARGET[$i]=$input
+        i+=1
+    done
+    for value in "${LIST_TARGET[@]}"; do
+        if [[ $value != "" ]]; then
+            python $SCRIPTDIR/histogram.py $value $GRAPH $DATA $TARGET
+        fi
+    done
+
+fi
+
+# for value in "${LIST_TARGET[@]}"; do
+#     if [[ $value != "" ]]; then
+#         if [[ $GRAPH == "line" ]]; then
+#             echo "LINE" 
+#             python $SCRIPTDIR/line.py $value $GRAPH $DATA $TARGET
+#         elif [[ $GRAPH == "hist" ]]; then
+#             echo "HITS"
+#             python $SCRIPTDIR/histogram.py $value $GRAPH $DATA $TARGET
+#         fi
+#     fi
+# done

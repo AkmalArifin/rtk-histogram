@@ -145,7 +145,7 @@ function getCI()
 function getLT()
 {
     local rawfname=$1
-    echo $(basename $rawfname | gawk -F"_" '{print $1}')
+    echo $(basename $rawfname | gawk -F"_" '{print $2}')
 }
 
 # given file name and line titile, get the plot command
@@ -165,7 +165,7 @@ function plotone()
     elif [[ $CI -gt $nbcolors ]]; then
         CI=$(( $CI % $nbcolors + 1))
     fi
-    echo "'$datfname' u $X:$Y t \"$LT\" w hist lc rgb ${rgbcolors[$CI]} lw 5, \\"
+    echo "'$datfname' u $X:$Y t \"$LT\" w ${GRAPH} lc rgb ${rgbcolors[$CI]} lw 5, \\"
 }
 
 function genplot()
