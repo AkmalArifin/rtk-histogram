@@ -2,7 +2,7 @@ import os
 import sys
 import re
 
-DIVIDER = 1000000 # cdf graph per 100 us
+RANGE = 1000 # cdf graph per 100 us
 
 def combine_log(file_name, folder_name):
 
@@ -103,23 +103,28 @@ def average_log(file_name, folder_name):
 
 # TODO: Fix cdf log
 def cdf_log(log):
+    # sort latency
     log.sort(key=lambda x: x[1])
 
+    # for line in log:
+    #     print(line)
+
     new_log = []
+    new_log.append([0, log[0][1]])
     
-    iter_lat = int(log[0][1]/DIVIDER)
-    print("Iter lat", iter_lat)
+    iter_lat = log[0][1]
+    # print("Iter lat", iter_lat)
     total = len(log)
     for i in range(len(log)):
-        if (iter_lat < int(log[i][1]/DIVIDER)):
+        if (iter_lat + RANGE < log[i][1]):
             prob = (i+1)/total
-            new_log.append([prob, (iter_lat+1)*DIVIDER])
-            iter_lat = int(log[i][1]/DIVIDER)
+            new_log.append([prob, log[i-1][1]])
+            iter_lat = log[i][1]
 
-    new_log.append([1, (iter_lat+1)*DIVIDER])
+    # new_log.append([1.0, log[total-1][1]])
 
-    for line in new_log:
-        print(line)
+    # for line in new_log:
+    #     print(line)
     return new_log
 
 def write_file(log, file_name, folder_name):

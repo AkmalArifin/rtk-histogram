@@ -70,7 +70,7 @@ case $GRAPH in
                 X="(\$1/1000)"  # IOPS -> KIOPS, show in kiloiops
                 Y="(\$2/1000)" # timestamp ms -> s, show in seconds
                 ;;
-                "bw-time")
+            "bw-time")
                 TITLE="set title \"Bandwidth vs Time\""
                 XRANGE="set xrange [0:]"
                 YRANGE="set yrange [0:]"
@@ -79,6 +79,15 @@ case $GRAPH in
                 KEY="set key bmargin center horizontal"
                 X="(\$1/1000)"      # timestamp ms -> s, show in seconds
                 Y="(\$2*0.001024)"  # bandwidth KiB/s -> MB/s, show in megabyte per second
+                ;;
+            "lat-cdf")
+                TITLE="set title \"Latency CDF\""
+                XRANGE="set xrange [:]"
+                YRANGE="set yrange [0:]"
+                XLABEL="set xlabel \"Latency (ms)\\n\""
+                KEY="set key bmargin center horizontal"
+                X="(\$2*0.000001)"      # timestamp ms -> s, show in seconds
+                Y=1  # bandwidth KiB/s -> MB/s, show in megabyte per second
                 ;;
             *)
                 echo "Unknown Type: $TYPE, exiting .."
@@ -128,7 +137,8 @@ esac
 
 TERM="set term postscript eps enhanced color 20"
 OUTPUT="set output \"eps/${TARGET}_${DATA}.eps\""
-SIZE="set size 2,1.5"
+# SIZE="set size 2,1.5"
+SIZE="set size 1,.7"
 PLOT="plot \\"
 
 declare -a rgbcolors=(\"gray\" \"green\" \"blue\" \"magenta\" \"orange\" \
@@ -145,7 +155,7 @@ function getCI()
 function getLT()
 {
     local rawfname=$1
-    echo $(basename $rawfname | gawk -F"_" '{print $2}')
+    echo $(basename $rawfname | gawk -F"_" '{print $1}')
 }
 
 # given file name and line titile, get the plot command
