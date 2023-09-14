@@ -36,13 +36,27 @@ DATA="$3"
 
 if [[ $GRAPH == "line" ]]; then
     echo "LINE"
-    python $SCRIPTDIR/line.py $TARGET $GRAPH $DATA
+
+    i=1
+    LIST_TARGET=($1)
+    input=" "
+
+    while [[ $input != "" ]]; do
+        read input
+        LIST_TARGET[$i]=$input
+        i+=1
+    done
+    for value in "${LIST_TARGET[@]}"; do
+        if [[ $value != "" ]]; then
+            python $SCRIPTDIR/line.py $value $GRAPH $DATA $TARGET
+        fi
+    done
 elif [[ $GRAPH == "hist" ]]; then
     echo "HIST"
 
     i=1
     LIST_TARGET=($1)
-    input="temporary"
+    input=" "
 
     while [[ $input != "" ]]; do
         read input

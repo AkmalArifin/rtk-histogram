@@ -4,6 +4,8 @@
 # Generate a template gnuplot file
 #
 
+# TODO: create plot filter it by its extension or create another folder each data
+
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
     TOPDIR="$( cd -P "$(dirname "$SOURCE" )" && pwd )"
@@ -82,7 +84,7 @@ case $GRAPH in
                 ;;
             "lat-cdf")
                 TITLE="set title \"Latency CDF\""
-                XRANGE="set xrange [:]"
+                XRANGE="set xrange [0:]"
                 YRANGE="set yrange [0:]"
                 XLABEL="set xlabel \"Latency (ms)\\n\""
                 KEY="set key bmargin center horizontal"

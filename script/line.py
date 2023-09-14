@@ -148,6 +148,7 @@ DATDIR = TOPDIR + "/dat"
 folder_name = sys.argv[1]
 graph = sys.argv[2]
 data = sys.argv[3]
+target_folder_name = sys.argv[4]
 
 data1 = data.split("-")[0]
 data2 = data.split("-")[1]
@@ -170,4 +171,4 @@ for file_name in os.listdir(RAWDIR + '/' + folder_name):
             print("Data is unknown")
             exit
         
-        write_file(output, file_name, folder_name)
+        write_file(output, file_name, target_folder_name)
