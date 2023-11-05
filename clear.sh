@@ -43,8 +43,8 @@ if [[ -e plot/${input}.plot ]]; then
     rm -rf plot/${input}.plot
 fi
 
-if [[ -e eps/${input}.eps ]]; then
-    rm -rf eps/${input}.eps
+if [[ -e eps/${input}.pdf ]]; then
+    rm -rf eps/${input}.pdf
 fi
 
 echo "Done!"

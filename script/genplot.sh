@@ -137,10 +137,11 @@ case $GRAPH in
         ;;
 esac
 
-TERM="set term postscript eps enhanced color 20"
-OUTPUT="set output \"eps/${TARGET}_${DATA}.eps\""
+# TERM="set term postscript eps enhanced color 20"
+TERM="set term pdf"
+OUTPUT="set output \"eps/${TARGET}_${DATA}.pdf\""
 # SIZE="set size 2,1.5"
-SIZE="set size 1,.7"
+SIZE="set size 1,1"
 PLOT="plot \\"
 
 declare -a rgbcolors=(\"gray\" \"green\" \"blue\" \"magenta\" \"orange\" \
@@ -177,7 +178,7 @@ function plotone()
     elif [[ $CI -gt $nbcolors ]]; then
         CI=$(( $CI % $nbcolors + 1))
     fi
-    echo "'$datfname' u $X:$Y t \"$LT\" w ${GRAPH} lc rgb ${rgbcolors[$CI]} lw 5, \\"
+    echo "'$datfname' u $X:$Y t \"$LT\" w ${GRAPH} lc rgb ${rgbcolors[$CI]} lw 2, \\"
 }
 
 function genplot()
