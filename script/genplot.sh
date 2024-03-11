@@ -158,7 +158,7 @@ function getCI()
 function getLT()
 {
     local rawfname=$1
-    echo $(basename $rawfname | gawk -F"_" '{print $1}')
+    echo $(basename $rawfname | gawk -F"_" '{print $2}')
 }
 
 # given file name and line titile, get the plot command
