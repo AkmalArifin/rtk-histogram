@@ -34,6 +34,7 @@ GRAPH=$2
 # HIST
 # -- iops-numjobs   : IOPS (Y-axis) vs Numjobs (X-axis)
 # -- lat-numjobs    : Latency (Y-axis) vs Numjobs (X-axis)
+# -- lat-ratio      : Latency (Y-axis) vs Hit Ratio (X-axis)
 DATA=$3
 
 if [[ $# != 3 ]]; then

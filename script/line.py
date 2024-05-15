@@ -171,4 +171,4 @@ for file_name in os.listdir(RAWDIR + '/' + folder_name):
             print("Data is unknown")
             exit
         
-        write_file(output, file_name, target_folder_name)
+        write_file(output, folder_name, target_folder_name)

@@ -109,8 +109,8 @@ case $GRAPH in
                 YGRID="set grid ytics lt 2 lc rgb \"gray\" lw 1"
                 KEY="set key bmargin center horizontal"
                 # XTICS="set xtics 1,2,4,8,16,32,64,128"
-                Y="xtic(1)"
-                X="(\$2/1000)"
+                X="xtic(1)"
+                Y="(\$2/1000)"
                 ;;
             "lat-numjobs")
                 TITLE="set title \"Latency vs Numjobs\""
@@ -122,6 +122,18 @@ case $GRAPH in
                 YGRID="set grid ytics lt 2 lc rgb \"gray\" lw 1"
                 KEY="set key bmargin center horizontal"
                 # XTICS="set xtics 1,2,4,8,16,32,64,128"
+                Y="xtic(1)"
+                X="(\$2*0.000001)"
+                ;;
+            "lat-ratio")
+                TITLE="set title \"Latency vs Hit Ratio\""
+                STYLE="set style fill solid border .7"
+                XRANGE="set xrange[-1:]"
+                YRANGE="set yrange[0:]"
+                XLABEL="set xlabel \"Hit Ratio\\n\""
+                YLABEL="set ylabel \"Latency (ms)\""
+                YGRID="set grid ytics lt 2 lc rgb \"gray\" lw 1"
+                KEY="unset key"
                 Y="xtic(1)"
                 X="(\$2*0.000001)"
                 ;;
@@ -145,7 +157,8 @@ SIZE="set size 1,1"
 PLOT="plot \\"
 
 declare -a rgbcolors=(\"gray\" \"green\" \"blue\" \"magenta\" \"orange\" \
-                    \"cyan\" \"yellow\" \"purple\" \"pink\" \"red\")
+                    \"cyan\" \"yellow\" \"purple\" \"pink\" \"red\" \
+                    \"orchid\" \"skyblue\" \"sea-green\" \"brown\")
 
 nbcolors=${#rgbcolors[@]}
 
@@ -158,7 +171,7 @@ function getCI()
 function getLT()
 {
     local rawfname=$1
-    echo $(basename $rawfname | gawk -F"_" '{print $2}')
+    echo $(basename $rawfname | gawk -F"_" '{print $1}')
 }
 
 # given file name and line titile, get the plot command
@@ -209,12 +222,21 @@ function genplot()
         # settings should come before this line
         echo "${PLOT}"
         
-        cnt=0
-        for i in dat/$TARGET/*.dat; do
-            LT=$(getLT $i)
-            plotone $i $LT $cnt $nbfiles
-            ((cnt += 1))
-        done
+        case $DATA in
+            "lat-ratio")
+                i=dat/$TARGET/$TARGET.dat
+                LT=$(getLT $i)
+                plotone $i $LT 0 1
+                ;;
+            *)
+                cnt=0
+                for i in dat/$TARGET/*.dat; do
+                    LT=$(getLT $i)
+                    plotone $i $LT $cnt $nbfiles
+                    ((cnt += 1))
+                done
+                ;;
+        esac
     } > $PLOTDIR/${TARGET}_${DATA}.plot
 }
 

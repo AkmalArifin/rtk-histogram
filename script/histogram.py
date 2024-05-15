@@ -54,7 +54,7 @@ def combine_log(file_name, folder_name):
 
     return [numjobs, avg]
 
-def average_log(file_name, folder_name):
+def average_log(file_name, folder_name, data2):
 
     # Open and read file
     dir = RAWDIR + '/' + folder_name + '/' + file_name
@@ -104,7 +104,12 @@ def average_log(file_name, folder_name):
         sum += line[1]
     avg = sum / (highest_count * numjobs)
 
-    return [numjobs, avg]
+    if (data2 == "numjobs"):
+        return [numjobs, avg]
+    if (data2 == "ratio"):
+        name = folder_name.split("_")[2] + "%"
+        return [name, avg]
+
 
 TOPDIR = os.path.abspath(os.getcwd())
 RAWDIR = TOPDIR + "/raw"
@@ -130,7 +135,7 @@ for file_name in os.listdir(RAWDIR + '/' + folder_name):
         if data1 == "iops":
             output = combine_log(file_name, folder_name)
         elif data1 == "lat":
-            output = average_log(file_name, folder_name)
+            output = average_log(file_name, folder_name, data2)
         else:
             print("Data is unknown")
             exit

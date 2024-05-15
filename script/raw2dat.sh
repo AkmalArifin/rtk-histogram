@@ -63,11 +63,21 @@ elif [[ $GRAPH == "hist" ]]; then
         LIST_TARGET[$i]=$input
         i+=1
     done
-    for value in "${LIST_TARGET[@]}"; do
+    for value in "${LIST_TARGET[@]}"; do # Ini per file
         if [[ $value != "" ]]; then
             python $SCRIPTDIR/histogram.py $value $GRAPH $DATA $TARGET
         fi
     done
+
+    if [[ $DATA == "lat-ratio" ]]; then
+        FOLDER_PATH="$DATDIR"/"$TARGET"
+        for file in "$FOLDER_PATH"/*; do
+            if [ -f "$file" ] && [ $file != "$FOLDER_PATH"/"$TARGET".dat ]; then
+                # echo $file
+                cat $file >> "$FOLDER_PATH"/"$TARGET".dat
+            fi
+        done
+    fi
 
 fi
 
